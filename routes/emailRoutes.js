@@ -9,7 +9,7 @@ router.get('/tickets', async (req, res) => {
     const tickets = await Ticket.find();
     res.json(tickets);
   } catch (error) {
-    console.error('Error fetching tickets:', error);
+    // console.error('Error fetching tickets:', error);
     res.status(500).json({ message: 'Error fetching tickets' });
   }
 });
@@ -25,7 +25,7 @@ router.get('/tickets/:id', async (req, res) => {
 
     res.json(result);
   } catch (error) {
-    console.error('Error fetching ticket by token:', error);
+    // console.error('Error fetching ticket by token:', error);
     res.status(500).json({ message: 'Error fetching ticket' });
   }
 });

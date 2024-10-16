@@ -2,7 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const connectDB = require('./config/db');
 const emailRoutes = require('./routes/emailRoutes');
-const { startEmailFetching } = require('./controllers/emailController'); 
+const { startEmailFetching } = require('./controllers/emailController');
 
 const app = express();
 const cors = require('cors');
@@ -22,5 +22,5 @@ const fetchIntervalInSeconds = 10;
 startEmailFetching(fetchIntervalInSeconds);
 
 app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+  // console.log(`Server running on http://localhost:${PORT}`);
 });

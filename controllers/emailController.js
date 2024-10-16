@@ -78,7 +78,7 @@
 
 //                 try {
 //                   const emailContent = parsed.text || ''; // Get the email body
-                  
+
 //                   // Send request to extract information
 //                   const response = await axios.post('http://23.22.202.139:8000/extract-info', {
 //                     email_content: emailContent
@@ -164,7 +164,7 @@ const getProcessedUIDs = async () => {
     const tickets = await Ticket.find({}, 'uid');
     return new Set(tickets.map(ticket => ticket.uid));
   } catch (error) {
-    console.error('Error fetching processed UIDs:', error);
+    // console.error('Error fetching processed UIDs:', error);
     return new Set();
   }
 };
@@ -190,7 +190,7 @@ const fetchEmails = async () => {
   imap.once('ready', async function () {
     imap.openBox('INBOX', false, async function (err, box) {
       if (err) {
-        console.error('Error opening inbox:', err);
+        // console.error('Error opening inbox:', err);
         imap.end();
         return;
       }
@@ -203,20 +203,20 @@ const fetchEmails = async () => {
 
         imap.search([['SINCE', recentDate], ['FROM', senderEmail], 'UNSEEN'], function (err, results) {
           if (err) {
-            console.error('Error searching emails:', err);
+            // console.error('Error searching emails:', err);
             imap.end();
             return;
           }
 
           if (!results || !results.length) {
-            console.log('No recent unseen emails from the specified sender.');
+            // console.log('No recent unseen emails from the specified sender.');
             imap.end();
             return;
           }
 
           const newResults = results.filter(uid => !processedUIDs.has(uid)); // Only unprocessed UIDs
           if (newResults.length === 0) {
-            console.log('No new unseen emails to process.');
+            // console.log('No new unseen emails to process.');
             imap.end();
             return;
           }
@@ -227,13 +227,13 @@ const fetchEmails = async () => {
             msg.on('body', function (stream) {
               simpleParser(stream, async (err, parsed) => {
                 if (err) {
-                  console.error('Error parsing email:', err);
+                  // console.error('Error parsing email:', err);
                   return;
                 }
 
                 try {
                   const emailContent = parsed.text || ''; // Get the email body
-                  
+
                   // Send request to extract information
                   const response = await axios.post('http://23.22.202.139:8000/extract-info', {
                     email_content: emailContent
@@ -266,29 +266,29 @@ const fetchEmails = async () => {
                   });
 
                   await newTicket.save(); // Save ticket to database
-                  console.log('Ticket saved:', newTicket);
+                  // console.log('Ticket saved:', newTicket);
 
                 } catch (error) {
-                  console.error('Error processing email and saving ticket:', error);
+                  // console.error('Error processing email and saving ticket:', error);
                 }
               });
             });
           });
 
           f.once('end', function () {
-            console.log('Done fetching new unseen emails.');
+            // console.log('Done fetching new unseen emails.');
             imap.end();
           });
         });
       } catch (error) {
-        console.error('Error during email fetching:', error);
+        // console.error('Error during email fetching:', error);
         imap.end();
       }
     });
   });
 
   imap.once('error', function (err) {
-    console.error('IMAP connection error:', err);
+    // console.error('IMAP connection error:', err);
   });
 
   imap.connect();
